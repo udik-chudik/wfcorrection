@@ -29,7 +29,7 @@ function [img, amp, phase] = takeImage(act)
     rms_error = 1e-9;
     c_freq = 100.0;
     high_power = 11/3;
-    wf = prop_psd_errormap(wf, rms_error, c_freq, high_power, 'FILE', 'article_psd.fits', 'rms');
+    wf = prop_psd_errormap(wf, rms_error, c_freq, high_power, 'FILE', 'article_psd.fits');
 
     %wf = prop_propagate( wf, focal_length*100 );
     
