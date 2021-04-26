@@ -4,7 +4,7 @@ global N_ACT;
 
 errs = [];
 
-N_ACT = 10;
+N_ACT = 20;
 x0 = zeros(N_ACT,N_ACT);
 x = ga(@wopt, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-0.1*wavelength, ones(1,N_ACT*N_ACT)*0.1*wavelength,[],1);
 %[x,fval,exitflag,output] = fminsearch(@wopt, reshape(x0, [], 1));
@@ -34,5 +34,5 @@ function answer = wopt(x)
     %answer = max(max(cutZone( takeImage(reshape(x,[10 10])))));
     answer = sum(cutZone( takeImage(reshape(x,[N_ACT N_ACT]))), 'all');
     errs = [errs answer];
-    answer = answer + abs(sum(x))*1e5/length(x);
+    %answer = answer + abs(sum(x))*1e5/length(x);
 end
