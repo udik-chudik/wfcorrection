@@ -58,8 +58,9 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
   end
 
 % Plot (beam amplitude).^0.5
+%{
   ifig = ifig + 1;
-  %figure(ifig);
+  figure(ifig);
   clf;
   axes('FontSize', ftsz);
   imagesc((prop_get_amplitude(wavefront)).^0.5d0);
@@ -72,15 +73,16 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
   set(get(gcf, 'CurrentAxes'), 'FontSize', ftsz);
   tit1 = sprintf('After Occulter');
   title(tit1, 'FontSize', ftsz);
-
+%}
   wavefront  = prop_propagate(wavefront, f_lens, 'snm', 'pupil reimaging lens');
   wavefront  = prop_lens(wavefront, f_lens, 'pupil reimaging lens');
 
   wavefront  = prop_propagate(wavefront, f_lens * 2.0d0, 'snm', 'lyot stop');
 
 % Plot (beam amplitude)^0.2
+%{
   ifig = ifig + 1;
-  %figure(ifig);
+  figure(ifig);
   clf;
   axes('FontSize', ftsz);
   imagesc((prop_get_amplitude(wavefront)).^0.2d0);
@@ -93,7 +95,7 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
   set(get(gcf, 'CurrentAxes'), 'FontSize', ftsz);
   tit2 = sprintf('Before Lyot Stop');
   title(tit2, 'FontSize', ftsz);
-
+%}
   switch occulter_type
     case '8TH_ORDER'
       wavefront  = prop_circular_aperture(wavefront, 0.50d0, 'norm');

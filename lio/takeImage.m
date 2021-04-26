@@ -1,4 +1,6 @@
 function [wavefront, sampling] = takeImage(x)
+
+  global N_ACT;
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
   diam        =    0.1d0;               % diameter (m)
@@ -11,11 +13,11 @@ function [wavefront, sampling] = takeImage(x)
   wavefront   = prop_circular_aperture(wavefront, diam / 2.0d0);
   wavefront   = prop_define_entrance(wavefront);
 
-  wavefront   = telescope_with_dms(wavefront,f_lens, 1, reshape(x, [49 49]));
+  wavefront   = telescope_with_dms(wavefront,f_lens, 1, reshape(x, [N_ACT N_ACT]));
   
   wavefront   = coronagraph(wavefront, f_lens, 'GAUSSIAN', diam);
 
   [wavefront, sampling] = prop_end(wavefront);
-  
+ 
 end
 

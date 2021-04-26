@@ -3,15 +3,11 @@ wavelength = 5e-7;
 
 errs = [];
 
-global N_ACT;
-
-N_ACT = 100;
-
-x0 = zeros(N_ACT*N_ACT,1);
+x0 = zeros(49*49,1);
 
 %x = fminsearch(@fmin, x0);
 options = optimoptions('ga','FunctionTolerance',1e-10,'PlotFcn', @gaplotbestf);
-x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-0.05*wavelength, ones(1,N_ACT*N_ACT)*0.05*wavelength,[],options);
+x = ga(@fmin, 49*49, [], [], [],[], ones(1,49*49)*-0.05*wavelength, ones(1,49*49)*0.05*wavelength,[],options);
 
 img1 = takeImage(x0);
 img2 = takeImage(reshape(x, [N_ACT N_ACT]));

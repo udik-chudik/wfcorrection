@@ -8,6 +8,7 @@
 
 
 function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
+    global N_ACT;
 %        wavefront = telescope_dm(wavefront, fl_lens, use_errors, use_dm)
 %
 % Outputs:
@@ -43,8 +44,8 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
   wavefront = prop_propagate(wavefront, fl_lens, 'snm', 'DM');
 
 
-    nact =    49;               % number of DM actuators along one axis
-    nact_across_pupil =    47;  % number of DM actuators across pupil
+    nact =    N_ACT;               % number of DM actuators along one axis
+    nact_across_pupil =    N_ACT-2;  % number of DM actuators across pupil
     dm_xc = fix(nact / 2);      % actuator X index at wavefront center
     dm_yc = fix(nact / 2);      % actuator Y index at wavefront center
     d_beam = 2.0d0 * prop_get_beamradius(wavefront);    % beam diameter
