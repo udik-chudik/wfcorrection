@@ -1,11 +1,15 @@
 global errs;
+global last_x;
+
+last_x = 0;
+
 wavelength = 5e-7;
 
 errs = [];
 
 global N_ACT;
 
-N_ACT = 100;
+N_ACT = 40;
 
 x0 = zeros(N_ACT*N_ACT,1);
 
@@ -29,8 +33,16 @@ s0/s1
 
 function s = fmin(x)
     global errs;
+    global last_x;
+    last_x = x;
+    %s = sum(sum(cutZone(takeImage(x))));
+    % with regularization
+    a = 1000;
+    b = 10;
+    c = 1e6;
     
-    s = sum(sum(cutZone(takeImage(x))));
+    image = takeImage(x);
+    s = a*mean(cutZone(image), 'all') + b*mean(image, 'all') + c*dot(x,x);
     
     errs = [errs s];
 end
