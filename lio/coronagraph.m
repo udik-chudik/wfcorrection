@@ -31,8 +31,8 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
   ftsz       =   16;            % size of font in plots
   global ifig      ;            % index of figure
 
-  wavefront  = prop_lens(wavefront, f_lens, 'coronagraph imaging lens');
-  wavefront  = prop_propagate(wavefront, f_lens, 'snm', 'occulter');
+  wavefront  = prop_lens(wavefront, f_lens );  % 'coronagraph imaging lens'
+  wavefront  = prop_propagate(wavefront, f_lens );  % 'snm', 'occulter'
 
 % Occulter sizes are specified here in units of lambda / diameter.
 % Convert lambda / diameter to radians, then to meters.
@@ -74,10 +74,10 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
   tit1 = sprintf('After Occulter');
   title(tit1, 'FontSize', ftsz);
 %}
-  wavefront  = prop_propagate(wavefront, f_lens, 'snm', 'pupil reimaging lens');
-  wavefront  = prop_lens(wavefront, f_lens, 'pupil reimaging lens');
+  wavefront  = prop_propagate(wavefront, f_lens  );      % 'pupil reimaging lens'
+  wavefront  = prop_lens(wavefront, f_lens);  % 'pupil reimaging lens'
 
-  wavefront  = prop_propagate(wavefront, f_lens * 2.0d0, 'snm', 'lyot stop');
+  wavefront  = prop_propagate(wavefront, f_lens * 2.0d0 ); % 'lyot stop'
 
 % Plot (beam amplitude)^0.2
 %{
@@ -105,9 +105,9 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
       wavefront  = prop_circular_aperture(wavefront, 0.84d0, 'norm');
   end
 
-  wavefront  = prop_propagate(wavefront, f_lens, 'snm', 'reimaging lens');
-  wavefront  = prop_lens(wavefront, f_lens, 'reimaging lens');
+  wavefront  = prop_propagate(wavefront, f_lens );  % 'reimaging lens'
+  wavefront  = prop_lens(wavefront, f_lens );  % 'reimaging lens'
 
-  wavefront  = prop_propagate(wavefront, f_lens, 'snm', 'final focus');
+  wavefront  = prop_propagate(wavefront, f_lens ); % 'final focus'
 
 end                     % function coronagraph
