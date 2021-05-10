@@ -29,9 +29,8 @@ function wavefront = telescope_dm(wavefront, fl_lens, use_errors, use_dm)
     rms_error  =    10.0d-09  ; % RMS wavefront error
     c_freq     =    15.0d0    ; % correlation frequency (cycles / m)
     high_power =     3.0d0    ; % high frequency falloff
-    flnm = 'telescope_obj.fits';
-    [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
-                             c_freq, high_power, 'file', flnm, 'rms');
+    flnm = 'telescope_10nm.fits';
+    [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, c_freq, high_power, 'file', flnm, 'rms');
   end
   wavefront = prop_lens(wavefront, fl_lens, 'objective');
 
