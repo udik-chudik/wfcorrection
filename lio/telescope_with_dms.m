@@ -27,10 +27,10 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   if use_errors == 1
-    rms_error  =    5.0d-09  ; % RMS wavefront error
+    rms_error  =    500.0d-09  ; % RMS wavefront error
     c_freq     =    15.0d0    ; % correlation frequency (cycles / m)
     high_power =     3.0d0    ; % high frequency falloff
-    flnm = 'telescope_5nm.fits';
+    flnm = 'telescope_500nm.fits';
     [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
                              c_freq, high_power, 'file', flnm, 'rms');
   end

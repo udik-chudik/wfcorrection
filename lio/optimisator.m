@@ -15,7 +15,7 @@ x0 = zeros(N_ACT*N_ACT,1);
 
 %x = fminsearch(@fmin, x0);
 options = optimoptions('ga','FunctionTolerance',1e-10,'PlotFcn', @gaplotbestf);
-x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-3*5e-9, ones(1,N_ACT*N_ACT)*3*5e-9,[],options);    % 3*RMS
+x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-3*500e-9, ones(1,N_ACT*N_ACT)*3*500e-9,[],options);    % 3*RMS
 
 img1 = takeImage(x0);
 img2 = takeImage(reshape(x, [N_ACT N_ACT]));
