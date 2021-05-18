@@ -1,8 +1,7 @@
-function [wavefront, sampling] = takeImage(x)
+function [wavefront, sampling] = takeImageWithPlanet(x)
 
   global N_ACT;
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+
   diam        =    0.1d0;               % diameter (m)
   f_lens      =   24.0d0 * diam;        % focal length (m)
   beam_ratio  =    0.3d0;               % beam diameter fraction

@@ -55,6 +55,8 @@ function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
       wavefront  = prop_multiply(wavefront, gauss_spot);
     case 'SOLID'
       wavefront  = prop_circular_obscuration(wavefront, occrad_m);
+      case 'NONE'
+
   end
 
 % Plot (beam amplitude).^0.5
