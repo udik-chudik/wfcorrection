@@ -42,7 +42,7 @@ function [Ifinal, sampling] = takeImageWithPlanet(x)
   
   In = 0.071296286114022;%max(Icoro, [], 'all');
   
-  Ifinal = Icoro + Iplanet/1e4;
+  Ifinal = Icoro + Iplanet*1e0/1e4;
   Ifinal = Ifinal/In;
   
 end
