@@ -64,8 +64,7 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
 % Need to put on opposite pattern;
 % convert wavefront error to surface height
 
-    wavefront = prop_dm(wavefront, x, ...
-                  dm_xc, dm_yc, act_spacing, 'fit');
+    wavefront = prop_dm(wavefront, x, dm_xc, dm_yc, act_spacing, 'fit');
   
 
   wavefront = prop_propagate(wavefront, fl_lens ); %'snm', 'coronagraph lens'

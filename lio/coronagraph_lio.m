@@ -7,7 +7,7 @@
 %   Matlab translation by Gary Gutt
 
 
-function wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
+function wavefront = coronagraph_lio(wavefront, f_lens, occulter_type, diam)
 %        wavefront = coronagraph(wavefront, f_lens, occulter_type, diam)
 % A coronagraph example from the Proper Manual
 %

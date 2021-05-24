@@ -1,4 +1,4 @@
-function [wavefront, sampling] = takeImage(x)
+function [wavefront, sampling] = takeImage(x, tt)
 
   global N_ACT;
 %UNTITLED Summary of this function goes here
@@ -13,11 +13,18 @@ function [wavefront, sampling] = takeImage(x)
   wavefront   = prop_circular_aperture(wavefront, diam / 2.0d0);
   wavefront   = prop_define_entrance(wavefront);
 
+  wavefront = add_tip_tilt(wavefront, tt(1), tt(2));
   wavefront   = telescope_with_dms(wavefront,f_lens, 1, reshape(x, [N_ACT N_ACT]));
   
-  wavefront   = coronagraph(wavefront, f_lens, 'GAUSSIAN', diam);
+  %wavefront   = coronagraph_lio(wavefront, f_lens, 'GAUSSIAN', diam);
+  
+  wavefront   = coronagraph_rot(wavefront, f_lens);
 
-  [wavefront, sampling] = prop_end(wavefront);
+  %[wavefront, sampling] = prop_end(wavefront);
+  
+  %wavefront = wavefront/4;
+  %wavefront = abs(wavefront).^2;
+  %wavefront = wavefront/4;
  
 end
 
