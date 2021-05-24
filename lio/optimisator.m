@@ -9,18 +9,24 @@ errs = [];
 
 global N_ACT;
 
-N_ACT = 32;
+N_ACT = 5;
 
-x0 = zeros(N_ACT*N_ACT,1);
+x0 = zeros(N_ACT*N_ACT, 1);
 
 global til_tilt_coeff;
 
-til_tilt_coeff = fminsearch(@(t) sum(sum(takeImage(x0, t))), [0 0]);
+til_tilt_coeff = fminsearch(@(t) sum(sum(takeImageWithPlanetIRS(x0, t))), [0 0]);
+
+I = takeImageWithPlanetIRS(x0, til_tilt_coeff);
+imagesc(I);
 
 
 %x = fminsearch(@fmin, x0);
-options = optimoptions('ga','FunctionTolerance',1e-10,'PlotFcn', @gaplotbestf);
-x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-3*1000e-9, ones(1,N_ACT*N_ACT)*3*1000e-9,[],options);    % 3*RMS
+%options = optimoptions('ga','FunctionTolerance',1e-10,'PlotFcn', @gaplotbestf);
+%x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-5*40e-9, ones(1,N_ACT*N_ACT)*5*40-9,[],options);    % 3*RMS
+
+options = optimoptions('simulannealbnd','FunctionTolerance',1e-10,'PlotFcns', {@saplotbestx,@saplotbestf,@saplotx,@saplotf}, 'AnnealingFcn', 'annealingfast', 'InitialTemperature', 100, 'TemperatureFcn', 'temperatureboltz', 'HybridFcn', 'patternsearch');
+x = simulannealbnd(@fmin, x0, ones(N_ACT*N_ACT, 1)*-500, ones(N_ACT*N_ACT, 1)*500,options);    % 3*RMS
 
 img1 = takeImage(x0, til_tilt_coeff);
 img2 = takeImage(reshape(x, [N_ACT N_ACT]), til_tilt_coeff);
@@ -46,8 +52,8 @@ function s = fmin(x)
     a = 1;   % Желаемый контраст в зоне
     b = 1;     % среднее по изображению ~ 1e-9
     c = 1e8;    % Средний квадрат отклонения ~ RMS^2 -> 2.5e-17 для 5 нм
-    image = takeImage(x, til_tilt_coeff);
-    s = a*mean(cutZone(image), 'all') + b*mean(image, 'all') + c*dot(x,x)/length(x);
-    
+    image = takeImageWithPlanetIRS(x*1e-9, til_tilt_coeff);
+    %s = a*mean(cutZone(image), 'all') + b*mean(image, 'all') + c*dot(x,x)/length(x);
+    s = mean(image, 'all');
     errs = [errs s];
 end
