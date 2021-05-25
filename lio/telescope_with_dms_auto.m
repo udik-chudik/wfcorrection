@@ -7,7 +7,9 @@
 %   Matlab translation by Gary Gutt
 
 
-function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
+function wavefront = telescope_with_dms_auto(wavefront, fl_lens, use_errors, x)
+
+    
     N_ACT = length(x);
 %        wavefront = telescope_dm(wavefront, fl_lens, use_errors, use_dm)
 %
@@ -42,7 +44,7 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
   wavefront = prop_lens(wavefront, fl_lens ); % 'telescope pupil imaging lens'
   wavefront = prop_propagate(wavefront, fl_lens ); % 'snm', 'DM'
 
-
+if use_errors == 1
     nact =    N_ACT;               % number of DM actuators along one axis
     nact_across_pupil =    N_ACT-2;  % number of DM actuators across pupil
     dm_xc = fix(nact / 2);      % actuator X index at wavefront center
@@ -55,17 +57,12 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
 % need to rotate error map (also need to shift due to the way
 % the rotate function operates to recenter map)
 
-    %obj_map = circshift(rot90(obj_map, 2), [1, 1]);
-
+obj_map = circshift(rot90(obj_map, 2), [1, 1]);
 % Interpolate map to match number of DM actuators
-
-    %dm_map = prop_magnify(x, map_spacing / act_spacing,                 'size_out', nact);
-
-% Need to put on opposite pattern;
-% convert wavefront error to surface height
-
-    wavefront = prop_dm(wavefront, x, dm_xc, dm_yc, act_spacing, 'fit');
-  
+dm_map = prop_magnify(obj_map, map_spacing / act_spacing, 'size_out', nact);
+% Need to put on opposite pattern and convert wavefront error to surface height
+wavefront = prop_dm(wavefront, -dm_map / 2.0, dm_xc, dm_yc, act_spacing, 'fit');
+end
 
   wavefront = prop_propagate(wavefront, fl_lens ); %'snm', 'coronagraph lens'
 

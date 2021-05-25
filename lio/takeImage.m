@@ -1,6 +1,13 @@
-function [wavefront, sampling] = takeImage(x, tt)
+function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors)
+% tt - [tip_tilt_x, tip_tilt_y]
+% x = [....]
+    N_ACT = sqrt(length(x));
+    if ~(floor(N_ACT) == N_ACT) || N_ACT < 3
+        error('---> takeImage: length(x) has to be square number and greater than 8');
+    end
+        
 
-  global N_ACT;
+
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
   diam        =    0.1d0;               % diameter (m)
@@ -14,17 +21,29 @@ function [wavefront, sampling] = takeImage(x, tt)
   wavefront   = prop_define_entrance(wavefront);
 
   wavefront = add_tip_tilt(wavefront, tt(1), tt(2));
-  wavefront   = telescope_with_dms(wavefront,f_lens, 1, reshape(x, [N_ACT N_ACT]));
   
-  %wavefront   = coronagraph_lio(wavefront, f_lens, 'GAUSSIAN', diam);
+  wavefront   = telescope_with_dms(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
+  %wavefront   = telescope_with_dms_auto(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
   
-  wavefront   = coronagraph_rot(wavefront, f_lens);
-
-  %[wavefront, sampling] = prop_end(wavefront);
+  switch coro_type
+      case 'LIO'
+          wavefront   = coronagraph_lio(wavefront, f_lens, 'GAUSSIAN', diam);
+          [Ifinal, sampling] = prop_end(wavefront);
+      case 'THRU'
+          wavefront  = prop_lens(wavefront, f_lens );  % 'reimaging lens'
+          wavefront  = prop_propagate(wavefront, f_lens ); % 'final focus'
+          [Ifinal, sampling] = prop_end(wavefront);
+      case 'IRS_180'
+          Ifinal = coronagraph_rot(wavefront, f_lens);
+      otherwise
+          error('---> takeImage: unknown coronagraph type');
+  end
+  Ifinal = Ifinal / 0.071296289442758;  % Normalize intensity (THRU + without errors)
   
-  %wavefront = wavefront/4;
-  %wavefront = abs(wavefront).^2;
-  %wavefront = wavefront/4;
- 
+  if use_planet
+     Iplanet = takeImage([-5*wavelength/diam 0], x, coro_type, 0, use_errors);
+     Ifinal = Ifinal + Iplanet/1e4;
+  end
+  
 end
 
