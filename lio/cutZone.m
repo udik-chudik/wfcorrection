@@ -1,4 +1,4 @@
 function [zone] = cutZone(img)
-    zone = img(100:120, 110:130);
+    zone = img(113:143, 109:129);
 end
 

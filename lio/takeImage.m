@@ -41,7 +41,7 @@ function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors
   Ifinal = Ifinal / 0.071296289442758;  % Normalize intensity (THRU + without errors)
   
   if use_planet
-     Iplanet = takeImage([-5*wavelength/diam 0], x, coro_type, 0, use_errors);
+     Iplanet = takeImage([-1*wavelength/diam 0], x, coro_type, 0, use_errors);
      Ifinal = Ifinal + Iplanet/1e4;
   end
   

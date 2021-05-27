@@ -1,7 +1,12 @@
 
 clear all
+close all
 
-fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_723times_reqularization2_100nm_RMS.fig');
+fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_649times_reqularization2_1000nm_RMS.fig');
+%fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_481times_reqularization2_500nm_RMS.fig');
+%fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_723times_reqularization2_100nm_RMS.fig');
+%fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_25times_reqularization2_40nm_RMS.fig');
+% fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_8times_reqularization2_10nm_RMS.fig');
 h=figure(fig);
 img=getimage(h);
 %rectangle(h)
@@ -28,18 +33,30 @@ FrameR1=img(R1.Position(2):(R1.Position(2)+R1.Position(4)),...
 figure(26), imagesc(FrameR1), colorbar
 figure(27), surf(FrameR2), hold on, surf(FrameR1), hold off
 
-figure(28), [counts, centers]=hist(reshape([FrameR2;FrameR1], ...
+figure(28), hist(reshape([FrameR2;FrameR1], ...
+    1, (size([FrameR2;FrameR1],1)*size([FrameR2;FrameR1],2))),21);
+
+[counts, centers]=hist(reshape([FrameR2;FrameR1], ...
     1, (size([FrameR2;FrameR1],1)*size([FrameR2;FrameR1],2))),21);
 MeanValR2=mean(mean(FrameR2)); MeanValR1=mean(mean(FrameR1)); 
 
+StrToFig29={num2str(round(100*MeanValR2)/100), num2str(round(100*MeanValR1)/100)};
+Str1ToFig29=num2str((MeanValR1-MeanValR2));
 figure(29), hist(reshape([FrameR2;FrameR1], ...
     1, (size([FrameR2;FrameR1],1)*size([FrameR2;FrameR1],2))),21), ...
     hold on
     plot([MeanValR2,MeanValR2],[0,1.1*max(counts)],'-r',...
         [MeanValR1,MeanValR1],[0,1.1*max(counts)],'-r',...
-        [MeanValR2,MeanValR1],[1.05*max(counts),1.05*max(counts)],'-r'), hold off
+        [MeanValR2,MeanValR1],[1.05*max(counts),1.05*max(counts)],'-r'), ...
+    text([MeanValR2,MeanValR1],1.1.*[max(counts), max(counts)], StrToFig29),...
+    text(mean([MeanValR1,MeanValR2]), max(counts), Str1ToFig29),  hold off
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 figure(28), surf(10.^FrameR2), hold on, surf(10.^FrameR1), hold off
 
 
