@@ -1,6 +1,6 @@
 
-clear all
-close all
+%clear all
+%close all
 
 fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_649times_reqularization2_1000nm_RMS.fig');
 %fig = openfig('C:\Users\user0\Documents\MatlabScripts\wfcorrection\Tavrov\ga_42x42_481times_reqularization2_500nm_RMS.fig');

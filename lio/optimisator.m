@@ -43,7 +43,7 @@ x0 = zeros(N_ACT*N_ACT, 1);
 
 
 options = optimoptions('particleswarm','PlotFcn', @pswplotbestf, 'MaxStallIterations', 100);
-x = particleswarm(@fmin,N_ACT*N_ACT,ones(N_ACT*N_ACT, 1)*-100, ones(N_ACT*N_ACT, 1)*100,options);
+x = particleswarm(@fmin,N_ACT*N_ACT,ones(N_ACT*N_ACT, 1)*-15, ones(N_ACT*N_ACT, 1)*15,options);
 
 img1 = takeImage([0 0], x0, 'IRS_180', 1, 1);
 img2 = takeImage([0 0], x*1e-9, 'IRS_180', 1, 1);
@@ -68,8 +68,8 @@ function s = fmin(x)
     b = 10;     % среднее по изображению ~ 1e-9
     c = 1e-7;    % Средний квадрат отклонения ~ RMS^2 -> 2.5e-17 для 5 нм
     image = takeImage([0 0], x*1e-9, 'IRS_180', 1, 1);
-    s = a*mean(cutZone(image), 'all') + b*mean(image, 'all'); + c*dot(x,x)/length(x);
+    %s = a*mean(cutZone(image), 'all') + b*mean(image, 'all'); + c*dot(x,x)/length(x);
     %s = a*mean(log10(image(:,1:127)), 'all');
-    %s = sum(image, 'all');
+    s = sum(image, 'all');
     errs = [errs s];
 end
