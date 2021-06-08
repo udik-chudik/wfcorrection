@@ -9,7 +9,7 @@ errs = [];
 
 global N_ACT;
 
-N_ACT = 12;
+N_ACT = 35;
 
 x0 = zeros(N_ACT*N_ACT, 1);
 
@@ -22,7 +22,7 @@ x0 = zeros(N_ACT*N_ACT, 1);
 %I = takeImage(x0, til_tilt_coeff);
 %imagesc(I);
 
-fmin(x0)
+
 
 %options = optimset('PlotFcns',@optimplotfval);
 %x = fminsearch(@fmin, x0, options);
@@ -63,7 +63,6 @@ imagesc([log10(img1) log10(img2)]);
 %s0/s1
 
 
-
 function s = fmin(x)
     global errs;
     global last_x;
@@ -75,7 +74,7 @@ function s = fmin(x)
     image = takeImage([0 0], x*10*1e-9, 'IRS_180', 1, 1);
     %s = a*mean(cutZone(image), 'all') + b*mean(image, 'all'); + c*dot(x,x)/length(x);
     %s = a*mean(log10(image(:,1:127)), 'all');
-    s = sum(image, 'all');
-    %s = sum(cutZone(image), 'all');
+    %s = sum(image, 'all');
+    s = sum(cutZone(image), 'all');
     errs = [errs s];
 end

@@ -1,6 +1,13 @@
 function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors)
-% tt - [tip_tilt_x, tip_tilt_y]
-% x = [....]
+% Tavrov CALL EXAMPLE: Timg1 = takeImage([0 0], x0, 'IRS_180', 1, 1)
+% tt - [tip_tilt_x, tip_tilt_y]         % Tavrov: Star signal [0,0] 
+                                        % Planet signal example: X..3Lam/D
+                                        % [-3*wavelength/diam 0]
+% x = [....]                          < % Vector To Matrix DM/SLM
+                                        % acturators heihts
+                                        % coro_type, .. Ok
+                                        % use_planet, .. Ok ”правл планетой
+                                        %  use_errors ???
     N_ACT = sqrt(length(x));
     if ~(floor(N_ACT) == N_ACT) || N_ACT < 3
         error('---> takeImage: length(x) has to be square number and greater than 8');
@@ -10,11 +17,11 @@ function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors
 
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-  diam        =    0.1d0;               % diameter (m)
-  f_lens      =   24.0d0 * diam;        % focal length (m)
-  beam_ratio  =    0.3d0;               % beam diameter fraction
-  wavelength = 5e-7;
-  grid_size = 256;
+  diam        =    0.1d0;         % diameter (m)        % Tavrov: FIXED 10 cm
+  f_lens      =   24.0d0 * diam;  % focal length (m)    % Tavrov: FIXED 2.4 m
+  beam_ratio  =    0.3d0;      % beam diameter fraction % Tavrov: ?????
+  wavelength = 5e-7;                        % Tavrov: lambda 500 nm
+  grid_size = 256;                          % Tavrov: FIXED 
   
   wavefront   = prop_begin(diam, wavelength, grid_size, beam_ratio);
   wavefront   = prop_circular_aperture(wavefront, diam / 2.0d0);
@@ -22,8 +29,7 @@ function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors
 
   wavefront = add_tip_tilt(wavefront, tt(1), tt(2));
   
-  wavefront   = telescope_with_dms_and_zern(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
-  %wavefront   = telescope_with_dms(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
+  wavefront   = telescope_with_dms(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
   %wavefront   = telescope_with_dms_auto(wavefront,f_lens, use_errors, reshape(x, [N_ACT N_ACT]));
   
   switch coro_type
@@ -38,7 +44,7 @@ function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors
           Ifinal = coronagraph_rot(wavefront, f_lens);
       otherwise
           error('---> takeImage: unknown coronagraph type');
-  end
+  end               %   \/------ Tavrov: ?????
   Ifinal = Ifinal / 0.071296289442758;  % Normalize intensity (THRU + without errors)
   
   if use_planet

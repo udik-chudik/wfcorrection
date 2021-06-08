@@ -42,6 +42,9 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
   [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
                              c_freq, high_power, 'file', flnm, 'rms');
   end
+  
+  wavefront = prop_zernikes( wavefront, [4,8], [0.5,0.2]*1.0e-7 );
+  
   wavefront = prop_lens(wavefront, fl_lens); % , 'objective'
 
 % Propagate through focus to the pupil
