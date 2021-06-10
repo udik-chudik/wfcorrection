@@ -33,6 +33,7 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
     flnm = 'telescope_40nm.fits';
     [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
                              c_freq, high_power, 'file', flnm, 'rms');
+    wavefront = prop_zernikes( wavefront, [4,8], [0.5,0.2]*1.0e-7 );
   elseif use_errors == 2;       % Tavrov modified 08/06/2021
   global use_errors_custom;
   rms_error  =  use_errors_custom.rms_error;    %  40.0d-09  ; % RMS wavefront error
@@ -43,7 +44,7 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
                              c_freq, high_power, 'file', flnm, 'rms');
   end
   
-  wavefront = prop_zernikes( wavefront, [4,8], [0.5,0.2]*1.0e-7 );
+  
   
   wavefront = prop_lens(wavefront, fl_lens); % , 'objective'
 

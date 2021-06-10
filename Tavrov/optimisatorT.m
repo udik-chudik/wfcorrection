@@ -13,6 +13,7 @@ N_ACT = 34;
 
 x0 = zeros(N_ACT*N_ACT, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Tavrov begin
+cd 'C:\Users\user0\Documents\MatlabScripts\wfcorrection\lio'
                                     % Four-step phase shifting technique
     xT=zeros(N_ACT, N_ACT);         % \/чтобы не было режима темного поля
     phase_offset=pi/7;              % phase off-set [rad];
@@ -34,50 +35,56 @@ x0 = zeros(N_ACT*N_ACT, 1);
 
 %TTT=reshape(xT_T(1,:,:),N_ACT*N_ACT, 1);
 imgT0 = takeImage([0 0], x0, 'IRS_180', 1, 0);
-imgT1 = takeImage([0 0], reshape(xT_T(1,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 1);
-imgT2 = takeImage([0 0], reshape(xT_T(2,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 1);
-imgT3 = takeImage([0 0], reshape(xT_T(3,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 1);
-imgT4 = takeImage([0 0], reshape(xT_T(4,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 1);
+imgT1 = takeImage([0 0], reshape(xT_T(1,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 0);
+imgT2 = takeImage([0 0], reshape(xT_T(2,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 0);
+imgT3 = takeImage([0 0], reshape(xT_T(3,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 0);
+imgT4 = takeImage([0 0], reshape(xT_T(4,:,:),N_ACT*N_ACT, 1), 'IRS_180', 1, 0);
 figure(10), imagesc(log10([imgT0, imgT1, imgT2 imgT3, imgT4])), colorbar;
 
 %>>>>function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors)
-imgT0 = takeImage([0 0], x0, 'THRU', 1, 1);
-imgT0C = takeImage([0 0], x0, 'IRS_180', 1, 1);
-figure(20), imagesc(log10([imgT0, imgT0C])), colorbar;
+%imgT0 = takeImage([0 0], x0, 'THRU', 1, 1);
+%imgT0C = takeImage([0 0], x0, 'IRS_180', 1, 1);
+%figure(20), imagesc(log10([imgT0, imgT0C])), colorbar;
 
 
 global use_errors_custom; % custom WF errors
-use_errors_custom.rms_error =  40.0d-11;    % 40.0d-9; RMS wavefront error
+use_errors_custom.rms_error =  40.0d-9;    % 40.0d-9; RMS wavefront error
 use_errors_custom.c_freq =  15.0d0;         % correlation frequency (cycles / m)
 use_errors_custom.high_power = 3.0d0;       % high frequency falloff
-use_errors_custom.flnm = 'telescope_40Tnm.fits'; % filename
-imgT0 = takeImage([0 0], x0, 'THRU', 1, 2);
-imgT0C = takeImage([0 0], x0, 'IRS_180', 1, 2);
+delete 'telescope_xxTnm.fits'
+use_errors_custom.flnm = 'telescope_xxTnm.fits'; % filename
+                                       %\/2 custom psd   
+imgT0 = takeImage([0 0], x0, 'THRU', 0, 2);
+imgT0C = takeImage([0 0], x0, 'IRS_180', 0, 2);
+imgT1 = takeImage([0 0], reshape(xT_T(1,:,:),N_ACT*N_ACT, 1), 'IRS_180', 0, 2);
+imgT2 = takeImage([0 0], reshape(xT_T(2,:,:),N_ACT*N_ACT, 1), 'IRS_180', 0, 2);
+imgT3 = takeImage([0 0], reshape(xT_T(3,:,:),N_ACT*N_ACT, 1), 'IRS_180', 0, 2);
+imgT4 = takeImage([0 0], reshape(xT_T(4,:,:),N_ACT*N_ACT, 1), 'IRS_180', 0, 2);
+%figure(10), imagesc(log10([imgT0, imgT1, imgT2 imgT3, imgT4])), colorbar;
+figure(20), imagesc(log10([imgT0, imgT0C, imgT1, imgT2 imgT3, imgT4])), colorbar;
 
-figure(20), imagesc(log10([imgT0, imgT0C])), colorbar;
 
+%imgT1 = takeImage([0 0], reshape(xT_T(1,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
+%imgT2 = takeImage([0 0], reshape(xT_T(2,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
+%imgT3 = takeImage([0 0], reshape(xT_T(3,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
+%imgT4 = takeImage([0 0], reshape(xT_T(4,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
 
-imgT1 = takeImage([0 0], reshape(xT_T(1,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
-imgT2 = takeImage([0 0], reshape(xT_T(2,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
-imgT3 = takeImage([0 0], reshape(xT_T(3,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
-imgT4 = takeImage([0 0], reshape(xT_T(4,:,:),N_ACT*N_ACT, 1), 'THRU', 1, 1);
-
-figure(10), imagesc(log10([imgT0, imgT1, imgT2 imgT3, imgT4])), colorbar;
-figure(11), imagesc(reshape(xT_T(2,:,:),35,35)), colorbar
-size(xT_T(2,:,:))
+%figure(10), imagesc(log10([imgT0, imgT1, imgT2 imgT3, imgT4])), colorbar;
+%figure(11), imagesc(reshape(xT_T(2,:,:),35,35)), colorbar
+%size(xT_T(2,:,:))
 % image algebra
-Tphase=atan((imgT4.^2-imgT2.^2)./(imgT1.^2-imgT3.^2));
+Tphase=atan((imgT4-imgT2)./(imgT1-imgT3));
  
 Tphase(isnan(Tphase))=0; %(1-isnan(Tphase)).*Tphase;
 figure(11), imagesc(Tphase), colorbar, title('Phase in image plane');
 
 
-figure(12), imagesc(angle(fftshift(ifft2(imgT1.*exp(Tphase))))), colorbar,  title('Phase in pupil plane');
+figure(12), imagesc(angle(fftshift(ifft2(imgT1.*exp(i*Tphase))))), colorbar,  title('Phase in pupil plane');
+figure(13), hist(reshape(angle(fftshift(ifft2(imgT1.*exp(i*Tphase)))),256*256,1))
 
 
-Tvisib=(2*sqrt((imgT4.^2-imgT2.^2).^2+(imgT1.^2-imgT3.^2).^2)./(imgT1.^2+imgT2.^2+...
-    imgT3.^2+imgT4.^2);
-%figure(12), 
+Tvisib=2*sqrt((imgT4-imgT2).^2+(imgT1-imgT3).^2)./(imgT1+imgT2+imgT3+imgT4); 
+figure(13), imagesc(abs(Tvisib)), colorbar
 
 
 %figure(10), imagesc([log10(imgT0) log10(imgT1)]);
