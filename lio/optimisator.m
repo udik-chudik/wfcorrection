@@ -30,7 +30,7 @@ fmin(x0)
 
 %'MutationFcn', {@mutationadaptfeasible, 2, 1}
 options = optimoptions('ga','FunctionTolerance',1e-10,'PlotFcns', {@gaplotbestindiv,@gaplotbestf,@gaplotexpectation,@gaplotrange}, 'MutationFcn', {@mutationadaptfeasible, 100, 100});
-x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-40*3, ones(1,N_ACT*N_ACT)*40*3,[],options);    % 3*RMS
+x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-160, ones(1,N_ACT*N_ACT)*160,[],options);    % 3*RMS
 %x = fmin_adam(@fmin, x0, 1);
 
 %options = optimoptions('patternsearch','MeshTolerance',0.1,'StepTolerance',0.1, 'PlotFcns', {@psplotbestf, @psplotbestx});
@@ -50,7 +50,7 @@ x = ga(@fmin, N_ACT*N_ACT, [], [], [],[], ones(1,N_ACT*N_ACT)*-40*3, ones(1,N_AC
 img1 = takeImage([0 0], x0, 'IRS_180', 1, 1);
 img2 = takeImage([0 0], x*1e-9, 'IRS_180', 1, 1);
 
-%imagesc([log10(cutZone(img1)) log10(cutZone(img2))]);
+imagesc([log10(cutZone(img1)) log10(cutZone(img2))]);
 imagesc([log10(img1) log10(img2)]);
 
 %imagesc([log10(cutZone(img1)) log10(cutZone(img2))]);
@@ -76,7 +76,7 @@ function s = fmin(x)
     image = takeImage([0 0], x*10*1e-9, 'IRS_180', 1, 1);
     %s = a*mean(cutZone(image), 'all') + b*mean(image, 'all'); + c*dot(x,x)/length(x);
     %s = a*mean(log10(image(:,1:127)), 'all');
-    %s = sum(image, 'all');
-    s = sum(cutZone(image), 'all');
+    s = sum(image, 'all');
+    %s = sum(cutZone(image), 'all');
     errs = [errs s];
 end
