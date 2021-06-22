@@ -1,24 +1,24 @@
 N_TRAIN = 500;
 N_VALID = 500;
 
-XTdata = zeros(41,41,1,N_TRAIN);
+XTdata = zeros(61,61,1,N_TRAIN);
 YTdata = zeros(N_TRAIN, 1);
 for i=1:N_TRAIN
-    y = (0.5-rand(1, 1))*1000;
+    y = rand(1, 1);
     YTdata(i) = y;
-    x = takeImage([0 0], [0 0 0 y 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
-    XTdata(:,:,1,i) = log10(x(128-20:128+20, 128-20:128+20));
+    x = takeImage([0 0], [0 0 0 y*500 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
+    XTdata(:,:,1,i) = x(128-30:128+30, 128-30:128+30)./0.12;
     disp(i)
 end
 
 
-XVdata = zeros(41,41,1,N_VALID);
+XVdata = zeros(61,61,1,N_VALID);
 YVdata = zeros(N_VALID, 1);
 for i=1:N_VALID
-    y = (0.5-rand(1, 1))*1000;
+    y = rand(1, 1);
     YVdata(i) = y;
-    x = takeImage([0 0], [0 0 0 y 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
-    XVdata(:,:,1,i) = log10(x(128-20:128+20, 128-20:128+20));
+    x = takeImage([0 0], [0 0 0 y*500 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
+    XVdata(:,:,1,i) = x(128-30:128+30, 128-30:128+30)./0.12;
     disp(i)
 end
 
@@ -30,6 +30,7 @@ end
 
 miniBatchSize  = 50;
 validationFrequency = floor(numel(YTdata)/miniBatchSize);
+%{
 options = trainingOptions('sgdm', ...
     'MiniBatchSize',miniBatchSize, ...
     'MaxEpochs',30, ...
@@ -42,8 +43,20 @@ options = trainingOptions('sgdm', ...
     'ValidationFrequency',100, ...
     'Plots','training-progress', ...
     'Verbose',false);
+%}
 
-net = trainNetwork(XTdata,YVdata,layers_57,options);
+options = trainingOptions('adam', ...
+    'LearnRateSchedule','piecewise', ...
+    'LearnRateDropFactor',0.2, ...
+    'LearnRateDropPeriod',5, ...
+    'MaxEpochs',20, ...
+    'MiniBatchSize',64, ...
+    'InitialLearnRate', 0.0001, ...
+    'ValidationData',{XVdata,YVdata},...
+    'ValidationFrequency',50,...
+    'Plots','training-progress');
 
-imagesc(XVdata(:,:,1,1))
+net = trainNetwork(XTdata,YTdata,layers_24,options);
 
+pd = predict(net, XVdata);
+scatter(pd, YVdata);
