@@ -1,24 +1,24 @@
 N_TRAIN = 500;
 N_VALID = 500;
 
-XTdata = zeros(61,61,1,N_TRAIN);
-YTdata = zeros(N_TRAIN, 1);
+XTdata = zeros(41,41,1,N_TRAIN);
+YTdata = zeros(N_TRAIN, 2);
 for i=1:N_TRAIN
-    y = rand(1, 1);
-    YTdata(i) = y;
-    x = takeImage([0 0], [0 0 0 y*500 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
-    XTdata(:,:,1,i) = x(128-30:128+30, 128-30:128+30)./0.12;
+    y = rand(2, 1);
+    YTdata(i,:) = y;
+    x = takeImage([0 0], [y(1)*500 0 y(2)*500 0 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
+    XTdata(:,:,1,i) = x(128-20:128+20, 128-20:128+20)./0.12;
     disp(i)
 end
 
 
-XVdata = zeros(61,61,1,N_VALID);
-YVdata = zeros(N_VALID, 1);
+XVdata = zeros(41,41,1,N_VALID);
+YVdata = zeros(N_VALID, 2);
 for i=1:N_VALID
-    y = rand(1, 1);
-    YVdata(i) = y;
-    x = takeImage([0 0], [0 0 0 y*500 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
-    XVdata(:,:,1,i) = x(128-30:128+30, 128-30:128+30)./0.12;
+    y = rand(2, 1);
+    YVdata(i,:) = y;
+    x = takeImage([0 0], [y(1)*500 0 y(2)*500 0 0 0 0 0 0]*1e-9, 'IRS_180' , 0, 0);
+    XVdata(:,:,1,i) = x(128-20:128+20, 128-20:128+20)./0.12;
     disp(i)
 end
 
@@ -56,7 +56,7 @@ options = trainingOptions('adam', ...
     'ValidationFrequency',50,...
     'Plots','training-progress');
 
-net = trainNetwork(XTdata,YTdata,layers_24,options);
+net = trainNetwork(XTdata,YTdata,layers_29,options);
 
 pd = predict(net, XVdata);
-scatter(pd, YVdata);
+scatter(pd(:,2), YVdata(:,2));
