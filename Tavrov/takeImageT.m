@@ -1,4 +1,4 @@
-function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors)
+function [Ifinal, sampling] = takeImageT(tt, x, coro_type, use_planet, use_errors)
 % tt - [tip_tilt_x, tip_tilt_y]
 % x = [....]
     N_ACT = sqrt(length(x));
@@ -36,8 +36,6 @@ function [Ifinal, sampling] = takeImage(tt, x, coro_type, use_planet, use_errors
           [Ifinal, sampling] = prop_end(wavefront);
       case 'IRS_180'
           Ifinal = coronagraph_rot(wavefront, f_lens);
-      case 'IRSP_180'
-          Ifinal = coronagraph_rot_pupil(wavefront, f_lens);
       otherwise
           error('---> takeImage: unknown coronagraph type');
   end

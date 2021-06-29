@@ -41,6 +41,25 @@ function wavefront = telescope_with_dms(wavefront, fl_lens, use_errors, x)
   flnm = use_errors_custom.flnm;%'telescope_40nm.fits';
   [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
                              c_freq, high_power, 'file', flnm, 'rms');
+  elseif use_errors == 3;       % Tavrov modified 28/06/2021  
+ global use_errors_custom;
+  rms_error  =  use_errors_custom.rms_error;    %  40.0d-09  ; % RMS wavefront error
+  c_freq     =  use_errors_custom.c_freq;       %   15.0d0    ; % correlation frequency (cycles / m)
+  high_power =  use_errors_custom.high_power;   % 3.0d0    ; % high frequency falloff
+  flnm = use_errors_custom.flnm;%'telescope_40nm.fits';
+  [wavefront, obj_map] = prop_psd_errormap(wavefront, rms_error, ...
+                             c_freq, high_power, 'file', flnm, 'rms'); 
+  TPhasewavefront=fftshift(angle(wavefront.wf));   
+  TPhasewavefront=abs(wavefront.wf).*exp(sqrt(1).*(use_errors_custom.PhaseWF_ADD+...
+      fftshift(angle(wavefront.wf))));
+  %  figure(18), imagesc(use_errors_custom.PhaseWF_ADD), colorbar
+  %  figure(18), imagesc(fftshift(angle(wavefront.wf))), colorbar
+  % figure(18), imagesc(angle(exp(sqrt(-1).*(use_errors_custom.PhaseWF_ADD+fftshift(angle(wavefront.wf)))))), colorbar
+ % figure(18), imagesc(angle(fftshift(abs(wavefront.wf)).*exp(sqrt(-1).*(use_errors_custom.PhaseWF_ADD+fftshift(angle(wavefront.wf)))))), colorbar
+  wavefront.wf=fftshift(fftshift(abs(wavefront.wf)).*exp(sqrt(-1).*(use_errors_custom.PhaseWF_ADD+fftshift(angle(wavefront.wf)))));
+  figure(18), imagesc(angle(fftshift(wavefront.wf))), colorbar
+  
+      
   end
   
   
